@@ -21,14 +21,12 @@ def detectSSID(pkts):
 
 	mgttypes = (0, 2, 4)
 
-	print "[!] Hunting for SSID: " + ssid
-
 	for pkt in pkts:
 		if pkt.haslayer(Dot11):
 			if pkt.type == 0 and pkt.subtype in mgttypes: 		
 				print pkt.addr2 + " " + pkt.info
 				if str(pkt.info) == str(ssid):
-					print "[+] SSID Found. Exitiing."
+					print "[+] SSID %s Found. Exitiing." % str(ssid)
 					exit(0)
 	
 
@@ -58,10 +56,12 @@ def main():
 	
 	if pcapfile is not None:
 		print "[+] Loading Pcap file"
+		print "[!] Hunting for SSID: " + ssid
 		pkts = rdpcap(pcapfile)
 		detectSSID(pkts)
 	if interface is not None:
 		print "[+] Using wifi interface: " + interface
+		print "[!] Hunting for SSID: " + ssid
 		sniff(iface=interface, prn=detectSSID)
 	
 	print "[-] Packet not detected."
